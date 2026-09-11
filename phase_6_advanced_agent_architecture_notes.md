@@ -12,25 +12,17 @@ Phase 4 taught tools and MCP.
 
 Phase 5 taught orchestration.
 
-Phase 6 focuses on the deeper intelligence and architecture behind advanced agents:
+Phase 6 focuses on:
 
 ```text
 Planning
-+
 Task Decomposition
-+
 Reasoning Strategies
-+
 Reflection
-+
 Self-Critique
-+
 Search
-+
 Memory
-+
 Multi-Agent Architecture
-+
 Long-Horizon Execution
 ```
 
@@ -94,7 +86,7 @@ For complex tasks:
                     Goal
                      │
                      ▼
-                Task Decomposer
+               Task Decomposer
                      │
                      ▼
                    Planner
@@ -121,59 +113,7 @@ For complex tasks:
 
 ---
 
-# 2. What You Need to Master
-
-## Planning
-
-Learn:
-
-- ReAct
-- Plan-and-execute
-- hierarchical planning
-- task decomposition
-- dynamic re-planning
-- dependency-aware planning
-- plan validation
-- plan repair
-
-## Reasoning / Verification
-
-Learn:
-
-- reflection
-- self-critique
-- verification
-- evaluator loops
-- search concepts
-- candidate generation
-- candidate ranking
-
-## Memory
-
-Understand:
-
-- conversation memory
-- working memory
-- episodic memory
-- semantic memory
-- procedural memory
-- long-term memory
-
-## Multi-Agent Architecture
-
-Learn when to use:
-
-- single agent
-- supervisor → workers
-- router → specialists
-- parallel agents
-- sequential agents
-- debate / critique
-- planner → executor
-
----
-
-# 3. Planning Fundamentals
+# 2. Advanced Planning
 
 Planning answers:
 
@@ -196,13 +136,11 @@ Plan:
 8. Recommend remediation
 ```
 
-Planning is not necessarily a fixed list.
-
 A strong agent can modify the plan when new evidence appears.
 
 ---
 
-# 4. ReAct
+# 3. ReAct
 
 ReAct combines reasoning-oriented decision making with actions and observations.
 
@@ -276,7 +214,7 @@ The key property:
 
 ---
 
-# 5. ReAct Strengths
+# 4. ReAct Strengths and Weaknesses
 
 Useful when:
 
@@ -304,7 +242,7 @@ progress checks
 
 ---
 
-# 6. Plan-and-Execute
+# 5. Plan-and-Execute
 
 Instead of deciding every step independently:
 
@@ -326,7 +264,6 @@ Example:
 
 ```text
 Planner:
-
 1. Query Prometheus
 2. Inspect Kubernetes
 3. Check recent deployment
@@ -334,11 +271,11 @@ Planner:
 5. Correlate findings
 ```
 
-Executor executes the plan.
+Executor performs the plan.
 
 ---
 
-# 7. ReAct vs Plan-and-Execute
+# 6. ReAct vs Plan-and-Execute
 
 | Strategy | ReAct | Plan-and-Execute |
 |---|---|---|
@@ -349,7 +286,7 @@ Executor executes the plan.
 | Dynamic environment | Strong | Requires re-planning |
 | Debugging | Action-by-action | Plan-level |
 
-In production, hybrid approaches are often useful:
+A production system can combine both:
 
 ```text
 Initial plan
@@ -365,36 +302,7 @@ Continue
 
 ---
 
-# 8. Dynamic Re-Planning
-
-Initial plan:
-
-```text
-1. Check pods
-2. Check logs
-3. Check database
-```
-
-Observation:
-
-```text
-Pods cannot resolve service DNS.
-```
-
-New plan:
-
-```text
-1. Check service
-2. Check endpoints
-3. Check CoreDNS
-4. Check network policy
-```
-
-The plan changed because reality changed.
-
----
-
-# 9. Hierarchical Planning
+# 7. Hierarchical Planning
 
 Large goals can be decomposed into levels.
 
@@ -420,11 +328,9 @@ Resolve production checkout incident.
               └── Verify
 ```
 
-This is hierarchical planning.
-
 ---
 
-# 10. Task Decomposition
+# 8. Task Decomposition
 
 A good decomposition creates tasks that are:
 
@@ -452,9 +358,9 @@ Better:
 
 ---
 
-# 11. Dependency-Aware Planning
+# 9. Dependency-Aware Planning
 
-Tasks can form a DAG.
+Tasks can form a DAG:
 
 ```text
 A ─────► C
@@ -479,9 +385,9 @@ Only execute a task when its dependencies are satisfied.
 
 ---
 
-# 12. Plan Validation
+# 10. Plan Validation
 
-Do not blindly execute generated plans.
+Never blindly execute generated plans.
 
 Validate:
 
@@ -498,21 +404,16 @@ Example:
 
 ```python
 def validate_plan(plan, tools, policy):
-
     for step in plan.steps:
-
         if step.tool not in tools:
             raise ValueError("Unknown tool")
-
         if not policy.allows(step):
-            raise PermissionError(
-                "Unauthorized action"
-            )
+            raise PermissionError("Unauthorized action")
 ```
 
 ---
 
-# 13. Plan Repair
+# 11. Plan Repair
 
 Suppose:
 
@@ -539,7 +440,7 @@ Do not restart from zero unless necessary.
 
 ---
 
-# 14. Reflection
+# 12. Reflection
 
 Reflection asks:
 
@@ -568,30 +469,7 @@ Reflection is a feedback mechanism.
 
 ---
 
-# 15. Reflection Loop
-
-```text
-Execute
- ↓
-Result
- ↓
-Reflect
- ↓
-Good?
- ├── YES → Continue
- └── NO → Improve
-             │
-             ▼
-           Re-plan
-```
-
-Reflection should have a concrete purpose.
-
-Do not add reflection simply to increase LLM calls.
-
----
-
-# 16. Self-Critique
+# 13. Self-Critique
 
 Self-critique asks the agent to challenge its own output.
 
@@ -608,17 +486,14 @@ Critique:
 
 Conclusion:
 Diagnosis is weak.
-```
 
-Then:
-
-```text
+Action:
 Search for stronger evidence.
 ```
 
 ---
 
-# 17. Reflection vs Self-Critique
+# 14. Reflection vs Self-Critique
 
 ### Reflection
 
@@ -637,11 +512,13 @@ Is this answer/plan correct?
 What evidence contradicts it?
 ```
 
-Both can feed an evaluator.
+Use an evaluator to determine whether another iteration is worthwhile.
+
+Do not add reflection simply to increase LLM calls.
 
 ---
 
-# 18. Verification
+# 15. Verification
 
 Never confuse:
 
@@ -675,21 +552,6 @@ Verification
 Evidence
 ```
 
----
-
-# 19. Verification Strategies
-
-Use:
-
-```text
-state comparison
-health checks
-metrics
-tests
-tool results
-independent evaluator
-```
-
 For infrastructure:
 
 ```text
@@ -702,29 +564,39 @@ After
 Compare
 ```
 
+---
+
+# 16. Hypothesis-Driven Agents
+
+Instead of randomly inspecting tools, maintain hypotheses.
+
 Example:
 
 ```text
-Before:
-5xx = 15%
-
-Restart
-
-After:
-5xx = 0.2%
-
-Verified.
+H1: Database failure
+H2: Kubernetes networking failure
+H3: Bad deployment
 ```
+
+Gather evidence:
+
+```text
+Evidence → H1
+Evidence → H2
+Evidence → H3
+```
+
+Then prioritize the strongest uncertain hypothesis.
+
+This is powerful for AI SRE systems.
 
 ---
 
-# 20. Tree Search Concepts
+# 17. Tree-Search Concepts
 
-You do not need to immediately implement full research-grade search algorithms.
+You do not need to immediately implement advanced research-grade search algorithms.
 
-Understand the concept.
-
-Suppose the agent has:
+Understand the concept:
 
 ```text
 Goal
@@ -742,8 +614,6 @@ Goal
        └── Tool 6
 ```
 
-The agent can explore candidate paths and compare them.
-
 Core concepts:
 
 ```text
@@ -757,55 +627,21 @@ prune
 select
 ```
 
----
-
-# 21. Search vs Normal Planning
-
-Normal:
-
-```text
-Choose one plan
- ↓
-Execute
-```
-
-Search:
-
-```text
-Generate candidates
- ↓
-Evaluate candidates
- ↓
-Select promising candidate
- ↓
-Expand
- ↓
-Evaluate
-```
-
-Useful when:
-
-- multiple plausible strategies exist
-- mistakes are expensive
-- candidate solutions can be scored
+Search is useful when multiple plausible strategies need comparison.
 
 ---
 
-# 22. Search Costs
+# 18. Search Cost
 
 Search can explode.
 
 If:
 
 ```text
-5 choices
-×
-5 choices
-×
-5 choices
+5 choices × 5 choices × 5 choices
 ```
 
-you already have:
+there are:
 
 ```text
 125 possible paths
@@ -817,11 +653,11 @@ At depth 5:
 5^5 = 3125
 ```
 
-Therefore use:
+Therefore understand:
 
 ```text
 pruning
-beam search concepts
+beam-search concepts
 heuristics
 budget
 depth limits
@@ -830,44 +666,11 @@ candidate scoring
 
 ---
 
-# 23. Task Decomposition Strategies
-
-### Sequential decomposition
-
-```text
-A → B → C
-```
-
-### Parallel decomposition
-
-```text
-   ┌→ A
-Goal
-   ├→ B
-   └→ C
-```
-
-### Hierarchical
-
-```text
-Goal
- ├── Subgoal A
- │    ├── A1
- │    └── A2
- └── Subgoal B
-      ├── B1
-      └── B2
-```
-
-Choose based on dependencies.
-
----
-
-# 24. Memory Fundamentals
+# 19. Memory Fundamentals
 
 Agents need memory because not everything belongs in the current context.
 
-Think of memory as:
+Think:
 
 ```text
 Information
@@ -883,7 +686,7 @@ Different memory types solve different problems.
 
 ---
 
-# 25. Conversation Memory
+# 20. Conversation Memory
 
 Stores conversation context.
 
@@ -907,12 +710,12 @@ Conversation memory allows:
 Use for:
 
 - ongoing dialogue
-- user intent
+- recent user intent
 - recent interaction context
 
 ---
 
-# 26. Working Memory
+# 21. Working Memory
 
 Temporary information required for the current task.
 
@@ -926,11 +729,11 @@ Current errors
 Current hypothesis
 ```
 
-Working memory should usually be short-lived.
+Working memory is usually short-lived.
 
 ---
 
-# 27. Episodic Memory
+# 22. Episodic Memory
 
 Stores experiences/events.
 
@@ -939,8 +742,6 @@ Example:
 ```text
 Incident:
 checkout-api
-Date:
-2026-09-01
 
 Cause:
 bad configuration
@@ -963,7 +764,7 @@ Episodic memory is:
 
 ---
 
-# 28. Semantic Memory
+# 23. Semantic Memory
 
 Stores generalized knowledge.
 
@@ -973,20 +774,22 @@ Example:
 Checkout API depends on PostgreSQL.
 ```
 
-or:
-
-```text
-CrashLoopBackOff often indicates repeated
-container startup failure.
-```
-
 Semantic memory is:
 
 > **What do we know?**
 
+Sources can include:
+
+```text
+architecture
+documentation
+service metadata
+verified facts
+```
+
 ---
 
-# 29. Procedural Memory
+# 24. Procedural Memory
 
 Stores how to perform tasks.
 
@@ -1010,19 +813,16 @@ Procedural memory is:
 
 ---
 
-# 30. Long-Term Memory
+# 25. Long-Term Memory
 
-Persistent knowledge across tasks and sessions.
-
-Can include:
+Persistent information across sessions:
 
 ```text
-preferences
-facts
 past incidents
-learned patterns
+verified patterns
 procedures
-successful strategies
+stable architecture facts
+useful user preferences
 ```
 
 Long-term memory requires:
@@ -1031,16 +831,16 @@ Long-term memory requires:
 storage
 retrieval
 versioning
-privacy
 access control
-forgetting/deletion policies
+privacy
+quality control
 ```
+
+Do not automatically store everything.
 
 ---
 
-# 31. Memory Architecture
-
-A production memory system:
+# 26. Memory Architecture
 
 ```text
 Agent
@@ -1066,11 +866,9 @@ Relevant Memory
 Agent Context
 ```
 
-Do not retrieve every memory for every task.
-
 ---
 
-# 32. Memory Retrieval
+# 27. Memory Retrieval
 
 Query:
 
@@ -1078,7 +876,7 @@ Query:
 Why is checkout-api failing?
 ```
 
-Possible memories:
+Potential memories:
 
 ```text
 Recent incident
@@ -1095,15 +893,14 @@ relevance
 recency
 confidence
 scope
-tenant
 permissions
 ```
 
 ---
 
-# 33. Memory Safety
+# 28. Memory Safety
 
-Memory can become harmful if it stores:
+Memory can contain:
 
 - incorrect information
 - stale information
@@ -1113,7 +910,7 @@ Memory can become harmful if it stores:
 
 Treat memory as data, not absolute truth.
 
-Use:
+Store metadata:
 
 ```text
 source
@@ -1125,11 +922,9 @@ permissions
 
 ---
 
-# 34. Memory Write Policy
+# 29. Memory Write Policy
 
-Do not automatically save everything.
-
-A memory candidate should pass:
+Before storing:
 
 ```text
 Is it useful later?
@@ -1154,7 +949,7 @@ Secret
 
 ---
 
-# 35. Single-Agent Architecture
+# 30. Single-Agent Architecture
 
 Start with:
 
@@ -1174,11 +969,11 @@ Advantages:
 - less coordination
 - lower latency
 
-Default choice.
+This should be the default choice.
 
 ---
 
-# 36. Supervisor → Workers
+# 31. Supervisor → Workers
 
 Use when tasks require real specialization.
 
@@ -1207,7 +1002,7 @@ Supervisor controls:
 
 ---
 
-# 37. Router → Specialists
+# 32. Router → Specialists
 
 Use when one request belongs clearly to a domain.
 
@@ -1217,7 +1012,7 @@ Use when one request belongs clearly to a domain.
           ┌─────────┼─────────┐
           ▼         ▼         ▼
          AWS        K8s       DB
-       Specialist Specialist Specialist
+      Specialist Specialist Specialist
 ```
 
 Example:
@@ -1233,11 +1028,9 @@ Example:
 → Database
 ```
 
-Simple and efficient.
-
 ---
 
-# 38. Parallel Agents
+# 33. Parallel Agents
 
 Use when tasks are independent.
 
@@ -1262,7 +1055,7 @@ Good for:
 
 ---
 
-# 39. Sequential Agents
+# 34. Sequential Agents
 
 Use when each stage depends on the previous.
 
@@ -1292,7 +1085,7 @@ Do not parallelize dependent work.
 
 ---
 
-# 40. Debate / Critique
+# 35. Debate / Critique
 
 Example:
 
@@ -1302,11 +1095,11 @@ Example:
         ┌────────┴────────┐
         ▼                 ▼
     Agent A            Agent B
-    argues              critiques
+    proposes             critiques
         │                 │
         └────────┬────────┘
                  ▼
-             Judge
+              Judge
                  │
                  ▼
               Final
@@ -1327,14 +1120,14 @@ Costs:
 
 ---
 
-# 41. Planner → Executor
+# 36. Planner → Executor
 
 Architecture:
 
 ```text
               Planner
                  │
-              Plan
+               Plan
                  │
                  ▼
              Executor
@@ -1351,15 +1144,11 @@ Architecture:
               Planner
 ```
 
-Useful when:
-
-- planning is complex
-- execution is mostly deterministic
-- separation improves reliability
+Useful when planning is complex but execution can be controlled.
 
 ---
 
-# 42. Choosing the Architecture
+# 37. Architecture Selection
 
 Use this decision tree:
 
@@ -1400,11 +1189,9 @@ Planner → Executor
 
 ---
 
-# 43. The Cost of Multi-Agent Systems
+# 38. The Cost of Multi-Agent Systems
 
-More agents do not automatically mean better results.
-
-Costs include:
+More agents mean:
 
 ```text
 more LLM calls
@@ -1413,20 +1200,17 @@ more latency
 more state
 more coordination
 more failure modes
-more observability
 more security boundaries
+more observability
 ```
 
 Before adding an agent ask:
 
-```text
-What problem does this agent solve
-that another node/tool cannot?
-```
+> **What problem does this agent solve that another node, tool, or workflow cannot?**
 
 ---
 
-# 44. Multi-Agent Failure Modes
+# 39. Multi-Agent Failure Modes
 
 ### Infinite delegation
 
@@ -1461,9 +1245,7 @@ Researcher B → same research
 ### Context explosion
 
 ```text
-5 agents
- ×
-full history
+5 agents × full history
 ```
 
 ### Permission confusion
@@ -1474,7 +1256,7 @@ Worker accidentally gets production write access
 
 ---
 
-# 45. Preventing Multi-Agent Loops
+# 40. Preventing Delegation Loops
 
 Track:
 
@@ -1489,7 +1271,7 @@ handoff_count
 Set:
 
 ```text
-max_handoffs
+max handoffs
 max depth
 max total agent calls
 ```
@@ -1503,7 +1285,7 @@ if state["handoff_count"] > 8:
 
 ---
 
-# 46. Agent Contracts
+# 41. Agent Contracts
 
 Each specialist should have a clear contract.
 
@@ -1525,11 +1307,11 @@ Not responsible for:
 - Terraform apply
 ```
 
-This reduces overlap.
+Clear boundaries reduce overlap.
 
 ---
 
-# 47. Shared State vs Private State
+# 42. Shared State vs Private State
 
 ## Shared state
 
@@ -1544,8 +1326,6 @@ But can become messy.
 
 ## Private state
 
-Each agent has its own context.
-
 Useful for:
 
 ```text
@@ -1554,11 +1334,11 @@ security isolation
 different models
 ```
 
-Then return only necessary output.
+Return only necessary output to the parent.
 
 ---
 
-# 48. Agent Handoffs
+# 43. Agent Handoffs
 
 A handoff should contain:
 
@@ -1590,21 +1370,16 @@ Example:
 
 ---
 
-# 49. Agent Result Contracts
+# 44. Agent Result Contracts
 
-Do not pass free-form text between agents when possible.
-
-Use:
+Use structured results.
 
 ```python
 class InvestigationResult(BaseModel):
 
     root_cause: str | None
-
     confidence: float
-
     evidence: list[str]
-
     recommendations: list[str]
 ```
 
@@ -1612,7 +1387,7 @@ This makes multi-agent systems composable.
 
 ---
 
-# 50. Supervisor Architecture
+# 45. Supervisor Responsibilities
 
 A strong supervisor should:
 
@@ -1640,14 +1415,14 @@ Not:
 
 ---
 
-# 51. Multi-Agent Example — AI SRE
+# 46. AI SRE Multi-Agent Example
 
 ```text
                          Supervisor
                               │
           ┌───────────────────┼──────────────────┐
           ▼                   ▼                  ▼
-     K8s Specialist       AWS Specialist     Observability
+     K8s Agent             AWS Agent        Observability
           │                   │                  │
           └───────────────────┼──────────────────┘
                               ▼
@@ -1670,30 +1445,7 @@ Not:
 
 ---
 
-# 52. Advanced AI Coding System
-
-Another useful architecture:
-
-```text
-                     Supervisor
-                         │
-              ┌──────────┼──────────┐
-              ▼          ▼          ▼
-          Researcher   Coder      Tester
-              │          │          │
-              └──────────┼──────────┘
-                         ▼
-                      Reviewer
-                         │
-                         ▼
-                       User
-```
-
-Use only when the work genuinely benefits from specialization.
-
----
-
-# 53. Advanced Agent State
+# 47. Advanced Agent State
 
 Example:
 
@@ -1701,182 +1453,35 @@ Example:
 class AdvancedAgentState(TypedDict):
 
     goal: str
-
     objectives: list[str]
-
     plan: list[dict]
-
     current_task: str | None
-
     observations: list[dict]
-
     evidence: list[dict]
-
     hypotheses: list[dict]
-
     agent_results: list[dict]
-
     memories: list[dict]
-
     reflection: dict | None
-
     verification: dict | None
-
     approval: dict | None
-
     iteration: int
-
     cost: float
-
     status: str
 ```
 
-This is becoming a real agent operating state.
+This represents an operating state for a serious agent system.
 
 ---
 
-# 54. Hypothesis-Driven Agents
-
-Instead of:
-
-```text
-randomly inspect tools
-```
-
-maintain hypotheses.
+# 48. Long-Horizon Tasks
 
 Example:
-
-```text
-H1: Database failure
-H2: Kubernetes networking failure
-H3: Bad deployment
-```
-
-Gather evidence:
-
-```text
-Evidence → H1
-Evidence → H2
-Evidence → H3
-```
-
-Score hypotheses.
-
-```text
-H1: 0.20
-H2: 0.75
-H3: 0.40
-```
-
-Investigate the strongest uncertain hypothesis next.
-
-This is powerful for AI SRE systems.
-
----
-
-# 55. Confidence
-
-Agent output should distinguish:
-
-```text
-fact
-inference
-uncertainty
-```
-
-Example:
-
-```text
-Fact:
-Pod is CrashLoopBackOff.
-
-Fact:
-Logs contain database timeout.
-
-Inference:
-Application cannot reach database.
-
-Confidence:
-0.82
-```
-
-Avoid false precision. Confidence should be meaningful only if your evaluation method supports it.
-
----
-
-# 56. Evidence Graph
-
-For complex investigations:
-
-```text
-                Incident
-                   │
-          ┌────────┼─────────┐
-          ▼        ▼         ▼
-        Metric    Log      Deploy
-          │        │         │
-          └────────┼─────────┘
-                   ▼
-               Hypothesis
-                   │
-                   ▼
-                Evidence
-                   │
-                   ▼
-                Conclusion
-```
-
-This is more reliable than treating the final answer as unsupported text.
-
----
-
-# 57. Advanced Planning Loop
-
-A mature agent can use:
-
-```text
-Goal
- ↓
-Task Decomposition
- ↓
-Candidate Plans
- ↓
-Plan Evaluation
- ↓
-Select Plan
- ↓
-Execute
- ↓
-Observe
- ↓
-Verify
- ↓
-Reflect
- ↓
-     ┌───────────────┐
-     │               │
-   Success         Failure
-     │               │
-     ▼               ▼
-  Memory          Re-plan
-     │               │
-     └───────┬───────┘
-             ▼
-           Final
-```
-
----
-
-# 58. Long-Horizon Tasks
-
-Examples:
 
 ```text
 Migrate service to EKS
 ```
 
-Could require:
+Potential subtasks:
 
 ```text
 inventory
@@ -1889,9 +1494,7 @@ rollback
 documentation
 ```
 
-This can take hours.
-
-Therefore use:
+Long-horizon tasks require:
 
 ```text
 persistent state
@@ -1904,7 +1507,7 @@ recovery
 
 ---
 
-# 59. Durable Long-Horizon Architecture
+# 49. Durable Long-Horizon Architecture
 
 ```text
                  User
@@ -1930,12 +1533,12 @@ recovery
              Checkpoint
                   │
                   ▼
-              Continue
+               Continue
 ```
 
 ---
 
-# 60. Advanced Memory + Planning
+# 50. Memory + Planning
 
 Memory can improve planning:
 
@@ -1974,13 +1577,13 @@ Agent:
 Check NetworkPolicy early.
 ```
 
-Memory should influence priorities, not blindly dictate conclusions.
+Memory should influence priorities, not blindly determine conclusions.
 
 ---
 
-# 61. Procedural Memory for DevOps
+# 51. Procedural Memory for DevOps
 
-Create reusable operational procedures:
+Create reusable procedures:
 
 ```text
 Kubernetes incident procedure
@@ -1990,7 +1593,7 @@ CI/CD failure procedure
 Database incident procedure
 ```
 
-Agent can retrieve the appropriate procedure.
+Agent retrieves the appropriate procedure.
 
 This combines:
 
@@ -2006,7 +1609,7 @@ Tools
 
 ---
 
-# 62. Episodic Memory for Incident Management
+# 52. Episodic Memory for Incidents
 
 Store:
 
@@ -2036,7 +1639,7 @@ This can become an AI incident-learning system.
 
 ---
 
-# 63. Semantic Memory for Platform Knowledge
+# 53. Semantic Memory for Platform Knowledge
 
 Store stable knowledge:
 
@@ -2066,7 +1669,7 @@ This is highly aligned with Platform Engineering.
 
 ---
 
-# 64. Procedural + Semantic + Episodic
+# 54. Procedural + Semantic + Episodic
 
 Example:
 
@@ -2079,15 +1682,15 @@ To troubleshoot checkout-api:
 check metrics → pods → logs → DB.
 
 Episodic:
-On 2026-09-01, checkout-api failed because
-a configuration change broke DB connectivity.
+A previous checkout-api incident was caused by
+a configuration change that broke DB connectivity.
 ```
 
-Together they create a much richer AI platform.
+Together they create richer agent context.
 
 ---
 
-# 65. Advanced Project 1 — Planning Agent
+# 55. Hands-On Project 1 — Planning Agent
 
 Build:
 
@@ -2105,17 +1708,17 @@ Executor
 Verifier
 ```
 
-Use a DevOps task:
+DevOps task:
 
 ```text
 Prepare migration of an application to EKS.
 ```
 
-No destructive execution.
+Do not perform destructive execution.
 
 ---
 
-# 66. Advanced Project 2 — Reflection Agent
+# 56. Hands-On Project 2 — Reflection Agent
 
 Build:
 
@@ -2143,7 +1746,7 @@ Terraform plans
 
 ---
 
-# 67. Advanced Project 3 — Memory System
+# 57. Hands-On Project 3 — Memory System
 
 Implement:
 
@@ -2154,7 +1757,7 @@ semantic memory
 procedural memory
 ```
 
-Use:
+Potential storage:
 
 ```text
 PostgreSQL
@@ -2162,9 +1765,7 @@ PostgreSQL
 pgvector
 ```
 
-or another suitable storage layer.
-
-Create APIs:
+Create:
 
 ```text
 store_memory()
@@ -2176,7 +1777,7 @@ archive_memory()
 
 ---
 
-# 68. Advanced Project 4 — Multi-Agent SRE
+# 58. Hands-On Project 4 — Multi-Agent SRE
 
 Build:
 
@@ -2206,7 +1807,7 @@ Build:
 
 ---
 
-# 69. Advanced Project 5 — AI Incident Commander
+# 59. Capstone — AI Incident Commander
 
 User:
 
@@ -2231,11 +1832,9 @@ System:
 12. Store useful memory
 ```
 
-This should be your major Phase 6 project.
-
 ---
 
-# 70. Capstone Architecture
+# 60. Capstone Architecture
 
 ```text
                               User
@@ -2289,9 +1888,7 @@ This should be your major Phase 6 project.
 
 ---
 
-# 71. Phase 6 Production Requirements
-
-Your capstone should include:
+# 61. Production Requirements
 
 ## Planning
 
@@ -2308,15 +1905,17 @@ Your capstone should include:
 - [ ] self-critique
 - [ ] verification
 - [ ] hypothesis tracking
+- [ ] tree-search concepts
 
 ## Memory
 
+- [ ] conversation
 - [ ] working
 - [ ] episodic
 - [ ] semantic
 - [ ] procedural
 - [ ] long-term
-- [ ] memory retrieval
+- [ ] retrieval
 - [ ] memory write policy
 
 ## Multi-Agent
@@ -2324,10 +1923,13 @@ Your capstone should include:
 - [ ] single agent
 - [ ] router
 - [ ] supervisor
+- [ ] workers
 - [ ] parallel
 - [ ] sequential
 - [ ] planner/executor
-- [ ] critique/debate
+- [ ] debate/critique
+- [ ] contracts
+- [ ] handoffs
 
 ## Reliability
 
@@ -2350,7 +1952,7 @@ Your capstone should include:
 
 ---
 
-# 72. Observability
+# 62. Observability
 
 Track:
 
@@ -2390,7 +1992,7 @@ total_cost
 
 ---
 
-# 73. Advanced Failure Modes
+# 63. Advanced Failure Modes
 
 ## Planning failure
 
@@ -2438,7 +2040,7 @@ Design each failure explicitly.
 
 ---
 
-# 74. Architecture Principle
+# 64. Architecture Separation
 
 A useful separation:
 
@@ -2469,65 +2071,9 @@ Do not collapse everything into one giant "agent."
 
 ---
 
-# 75. Framework Mapping
+# 65. Architecture Decision Checklist
 
-After mastering concepts, map them to frameworks.
-
-| Concept | LangGraph | OpenAI Agents SDK | LlamaIndex |
-|---|---|---|---|
-| State | Graph state | Agent/session state | Workflow/context |
-| Planning | Nodes/LLM | Agent behavior | Agent/workflow |
-| Routing | Conditional edges | Handoffs/routing | Workflow routing |
-| Memory | Checkpoints + external memory | Session/state + external memory | Data/memory integrations |
-| Reflection | Graph node/loop | Agent/evaluator pattern | Workflow pattern |
-| Multi-agent | Subgraphs/supervisors | Agents/handoffs | Agent/workflows |
-| Human approval | Interrupts | Approval/tool patterns | Workflow pause/control |
-| Parallelism | Parallel branches | Concurrent execution patterns | Workflow parallelism |
-
-Framework APIs evolve. Keep the conceptual model independent.
-
----
-
-# 76. What NOT to Do
-
-### Don't create 10 agents.
-
-```text
-Agent A
-Agent B
-Agent C
-...
-```
-
-without a reason.
-
-### Don't add reflection everywhere.
-
-More calls ≠ more intelligence.
-
-### Don't store everything in memory.
-
-Memory quality matters more than memory quantity.
-
-### Don't let agents freely delegate.
-
-Use explicit contracts and limits.
-
-### Don't confuse planning with execution.
-
-Keep responsibilities clear.
-
-### Don't trust self-critique blindly.
-
-A model can critique itself incorrectly.
-
-Use independent verification where it matters.
-
----
-
-# 77. Architecture Decision Checklist
-
-Before introducing another agent ask:
+Before introducing another agent:
 
 ```text
 [ ] Is the task genuinely specialized?
@@ -2542,11 +2088,11 @@ Before introducing another agent ask:
 
 If most answers are "no":
 
-> Do not add the agent.
+> **Do not add the agent.**
 
 ---
 
-# 78. 10-Week Study Plan
+# 66. 10-Week Study Plan
 
 ## Weeks 1–2 — Advanced Planning
 
@@ -2597,12 +2143,12 @@ Research + Critique Agent
 Learn:
 
 ```text
-working memory
 conversation memory
-episodic
-semantic
-procedural
-long-term
+working memory
+episodic memory
+semantic memory
+procedural memory
+long-term memory
 retrieval
 memory write policies
 ```
@@ -2664,7 +2210,7 @@ Build:
 
 ---
 
-# 79. Daily Practice
+# 67. Daily Practice
 
 Assuming 2–3 hours/day:
 
@@ -2678,9 +2224,7 @@ Implement it.
 
 ### 30 minutes
 
-Break it intentionally.
-
-Examples:
+Break it intentionally:
 
 ```text
 bad plan
@@ -2697,7 +2241,7 @@ Explain the architecture aloud.
 
 ---
 
-# 80. Interview Questions
+# 68. Interview Questions
 
 ## Planning
 
@@ -2756,7 +2300,7 @@ Explain the architecture aloud.
 
 ---
 
-# 81. Senior System Design Question
+# 69. Senior System Design Question
 
 > Design an autonomous AI Incident Commander for a Kubernetes/AWS platform.
 
@@ -2828,7 +2372,7 @@ Discuss:
 
 ---
 
-# 82. Definition of Done
+# 70. Definition of Done
 
 You are finished with Phase 6 when you can:
 
@@ -2892,68 +2436,7 @@ You are finished with Phase 6 when you can:
 
 ---
 
-# 83. Phase 6 Final Mental Model
-
-You should now think about an advanced agent like this:
-
-```text
-                           GOAL
-                             │
-                             ▼
-                       UNDERSTAND
-                             │
-                             ▼
-                       DECOMPOSE
-                             │
-                             ▼
-                          PLAN
-                             │
-                   ┌─────────┴─────────┐
-                   ▼                   ▼
-                MEMORY              SEARCH
-                   │                   │
-                   └─────────┬─────────┘
-                             ▼
-                        ORCHESTRATE
-                             │
-          ┌──────────────────┼──────────────────┐
-          ▼                  ▼                  ▼
-       Specialist         Specialist         Specialist
-          │                  │                  │
-          └──────────────────┼──────────────────┘
-                             ▼
-                          EVIDENCE
-                             │
-                             ▼
-                         REFLECT
-                             │
-                       ┌─────┴─────┐
-                       ▼           ▼
-                    Correct     Incorrect
-                       │           │
-                       ▼           ▼
-                    Verify      Re-plan
-                       │           │
-                       └─────┬─────┘
-                             ▼
-                         APPROVAL
-                             │
-                             ▼
-                         EXECUTE
-                             │
-                             ▼
-                         VERIFY
-                             │
-                             ▼
-                      STORE MEMORY
-                             │
-                             ▼
-                           FINAL
-```
-
----
-
-# 84. North Star
+# 71. North Star
 
 The goal is not:
 
@@ -2963,7 +2446,7 @@ The goal is:
 
 > **I can decide whether a problem needs one agent, a workflow, or a multi-agent architecture—and then design the planning, memory, orchestration, verification, security, and reliability required to make it work in production.**
 
-A top-tier Agentic AI engineer should be able to look at a complex problem and ask:
+A top-tier Agentic AI engineer should be able to ask:
 
 ```text
 What is the goal?
@@ -3003,11 +2486,9 @@ That is advanced agent architecture.
 
 # Phase 6 → Phase 7 Transition
 
-After Phase 6, move to:
+Next:
 
 > **Phase 7 — Context Engineering**
-
-You will learn how to control exactly what information the model receives and when.
 
 Topics:
 
@@ -3015,17 +2496,19 @@ Topics:
 context windows
 context compression
 context selection
-context routing
-context caching
-memory/context interaction
-long-context strategies
-structured context
-dynamic context
-retrieval-aware context
-agent context budgets
+memory retrieval
+tool result compression
+conversation summarization
+state management
+prompt construction
+information prioritization
+agent trajectory management
+context security
+context budgeting
+context observability
 ```
 
-The progression becomes:
+The progression:
 
 ```text
 Phase 3
@@ -3062,4 +2545,4 @@ AI Platform / Agent Architect
 
 > **Do not maximize the number of agents. Maximize the reliability of the system.**
 
-A single well-designed agent with excellent tools, memory, planning and verification can be better than ten poorly coordinated agents.
+A single well-designed agent with excellent tools, memory, planning, and verification can be better than ten poorly coordinated agents.
